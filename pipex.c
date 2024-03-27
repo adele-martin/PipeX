@@ -1,32 +1,34 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include "pipex.h"
 
-void check_file_mode(const char *pathname)
+void open_files(t_pipe *pipe, char **argv)
 {
-if (!(access(pathname, R_OK|W_OK) == 0))
-	printf("Error, %s is not accessible in reading nor writing mode\n.", pathname);
-	exit(EXIT_FAILURE);
-if ((access(pathname, F_OK) == -1))
-	printf("Error, %s is not accessible in reading mode.\n", pathname);
-	exit(EXIT_FAILURE);
-if (!(access(pathname, W_OK) == 0))
-	printf("Error, %s is not accessible in writing mode.\n", pathname);
-	exit(EXIT_FAILURE);
-}
-
-void error_handling(int argc)
-{
-	if (argc != 5)
-	printf("Error. The program takes 4 arguments");
+	pipe->infile = open(argv[1], O_RDONLY);
+	pipe->outfile = open(argv[4], O_WRONLY);
+	if (pipe->infile == -1)
+	{
+		printf("Error. File does not exist.");
+		exit(EXIT_FAILURE);
+	}
+	if (pipe->infile == -1)
+	{
+		printf("Error. One file.");
+		exit(EXIT_FAILURE);
+	}
+	if (!(access(pipe->infile, R_OK) == -1))
+		printf("Error, o is not accessible in reading mode.\n");
+		exit(EXIT_FAILURE);
+	if (!(access(pipe->outfile, W_OK) == -1))
+		printf("Error, o is not accessible in reading mode.\n");
 		exit(EXIT_FAILURE);
 }
 
 int main(int argc, char **argv)
 {
-	error_handling(argc);
-	check_file_mode(argv[1]);
-	check_file_mode(argv[4]);
-
-
+	t_pipe	pipe;
+	open_files(&pipe, argv);
+	return EXIT_SUCCESS;
 }
